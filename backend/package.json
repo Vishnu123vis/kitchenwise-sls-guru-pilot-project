@@ -3,6 +3,7 @@
     "@serverless/typescript": "^4.15.1",
     "@types/aws-lambda": "^8.10.150",
     "@types/node": "^24.0.10",
+    "serverless-dotenv-plugin": "^6.0.0",
     "serverless-esbuild": "^1.55.1",
     "serverless-plugin-typescript": "^2.1.5",
     "ts-node": "^10.9.2",
@@ -13,6 +14,7 @@
     "@aws-sdk/client-dynamodb": "^3.840.0",
     "@aws-sdk/lib-dynamodb": "^3.840.0",
     "axios": "^1.10.0",
+    "dotenv": "^17.2.0",
     "uuid": "^11.1.0"
   }
 }

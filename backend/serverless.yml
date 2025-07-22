@@ -5,6 +5,12 @@ app: kitchenwise
 # "service" is the name of this project. This will also be added to your AWS resource names.
 service: KitchenWise
 
+# Load environment variables from .env file
+custom:
+  dotenv:
+    path: .env
+    logging: false
+
 provider:
   name: aws
   runtime: nodejs20.x
@@ -71,3 +77,6 @@ build:
     platform: node
     alias:
       '@libs': './src/libs'
+
+plugins:
+  - serverless-dotenv-plugin
