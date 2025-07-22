@@ -1,0 +1,64 @@
+test1:
+  handler: src/functions/test1function/index.handler
+  events:
+    - httpApi:
+        path: /test1
+        method: get
+        authorizer: cognitoAuthorizer 
+        
+
+pantryList:
+  handler: src/functions/pantry-crud/getPantryItems/index.handler
+  events:
+    - httpApi:
+        path: /pantry-items
+        method: get
+        authorizer: cognitoAuthorizer
+
+pantryGet:
+  handler: src/functions/pantry-crud/getPantryItem/index.handler
+  events:
+    - httpApi:
+        path: /pantry-items/{itemId}
+        method: get
+        authorizer: cognitoAuthorizer
+
+pantryCreate:
+  handler: src/functions/pantry-crud/createPantryItem/index.handler
+  events:
+    - httpApi:
+        path: /pantry-items
+        method: post
+        authorizer: cognitoAuthorizer
+
+pantryUpdate:
+  handler: src/functions/pantry-crud/updatePantryItem/index.handler
+  events:
+    - httpApi:
+        path: /pantry-items/{itemId}
+        method: put
+        authorizer: cognitoAuthorizer
+
+pantryDelete:
+  handler: src/functions/pantry-crud/deletePantryItem/index.handler
+  events:
+    - httpApi:
+        path: /pantry-items/{itemId}
+        method: delete
+        authorizer: cognitoAuthorizer
+
+getDashboardStats:
+  handler: src/functions/getDashboardStats/index.handler
+  events:
+    - httpApi:
+        path: /dashboard/stats
+        method: get
+        authorizer: cognitoAuthorizer
+
+generateRecipe:
+  handler: src/functions/generateRecipe/index.handler
+  events:
+    - httpApi:
+        path: /recipes/generate
+        method: post
+        authorizer: cognitoAuthorizer 

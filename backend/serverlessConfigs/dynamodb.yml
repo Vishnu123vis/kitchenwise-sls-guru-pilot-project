@@ -1,0 +1,31 @@
+PantryItemsTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: ${self:service}-pantry-items-${sls:stage}
+    AttributeDefinitions:
+      - AttributeName: userId
+        AttributeType: S
+      - AttributeName: sortKey
+        AttributeType: S
+    KeySchema:
+      - AttributeName: userId
+        KeyType: HASH
+      - AttributeName: sortKey
+        KeyType: RANGE
+    BillingMode: PAY_PER_REQUEST
+
+StarredRecipesTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: ${self:service}-starred-recipes-${sls:stage}
+    AttributeDefinitions:
+      - AttributeName: userId
+        AttributeType: S
+      - AttributeName: recipeId
+        AttributeType: S
+    KeySchema:
+      - AttributeName: userId
+        KeyType: HASH
+      - AttributeName: recipeId
+        KeyType: RANGE
+    BillingMode: PAY_PER_REQUEST

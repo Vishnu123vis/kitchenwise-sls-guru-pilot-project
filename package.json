@@ -1,0 +1,33 @@
+{
+  "name": "kitchenwise",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "deploy:backend": "cd backend && serverless deploy",
+    "deploy:frontend": "echo \"Frontend deploys automatically via Amplify\"",
+    "deploy:all": "npm run deploy:backend && echo \"Frontend will deploy via Amplify\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && serverless offline",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+  },
+  "keywords": ["kitchenwise", "monorepo", "nextjs", "serverless"],
+  "author": "",
+  "license": "ISC",
+  "description": "KitchenWise - A smart pantry management application with Next.js frontend and Serverless backend",
+  "devDependencies": {
+    "@aws-amplify/backend": "^1.16.1",
+    "@aws-amplify/backend-cli": "^1.8.0",
+    "@types/node": "^24.0.10",
+    "aws-cdk-lib": "^2.189.1",
+    "constructs": "^10.4.2",
+    "esbuild": "^0.25.5",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "aws-amplify": "^6.15.3"
+  }
+}

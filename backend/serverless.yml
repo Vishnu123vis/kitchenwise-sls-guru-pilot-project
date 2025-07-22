@@ -1,0 +1,73 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: vishnusubramani
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: kitchenwise
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: KitchenWise
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-2
+  stage: ${opt:stage, 'dev'}
+  profile: ${opt:profile, 'default'}
+ 
+  # Environment variables for Lambda functions
+  environment:
+    DYNAMODB_PANTRY_TABLE: ${self:service}-pantry-items-${sls:stage}
+    DYNAMODB_STARRED_RECIPES_TABLE: ${self:service}-starred-recipes-${sls:stage}
+    OPENAI_API_KEY: ${env:OPENAI_API_KEY, ''}
+    PEXELS_API_KEY: ${env:PEXELS_API_KEY, ''}
+  # IAM permissions for DynamoDB access
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - 'dynamodb:PutItem'
+            - 'dynamodb:Get*'
+            - 'dynamodb:Scan*'
+            - 'dynamodb:UpdateItem'
+            - 'dynamodb:DeleteItem'
+            - 'dynamodb:Query'
+          Resource: 
+            - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:service}-pantry-items-${sls:stage}
+            - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:service}-starred-recipes-${sls:stage}
+  httpApi:
+    authorizers:
+      cognitoAuthorizer:
+        type: jwt
+        identitySource: "$request.header.Authorization"
+        issuerUrl: https://cognito-idp.us-east-2.amazonaws.com/us-east-2_Z5syjm4tX
+        audience:
+          - 1t2aot59eh6pgt2i8ffvls8p5f
+    cors:
+      allowedOrigins:
+        - '*'
+      allowedHeaders:
+        - '*'
+      allowedMethods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - OPTIONS
+
+functions: ${file(./serverlessConfigs/functions.yml)}
+
+resources:
+  Resources:
+    ${file(./serverlessConfigs/dynamodb.yml)}
+
+# Built-in ESBuild configuration for Serverless Framework v4
+build:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    exclude:
+      - aws-sdk
+    target: node20
+    platform: node
+    alias:
+      '@libs': './src/libs'
