@@ -59,7 +59,7 @@ export const queryItems = async <T = any>(params: QueryCommandInput): Promise<{ 
     const result = await client.send(new QueryCommand(params));
     return {
       items: (result.Items as T[]) || [],
-      lastEvaluatedKey: result.LastEvaluatedKey,
+      lastEvaluatedKey: result.LastEvaluatedKey, //returns the last item in the query
     };
   } catch (error) {
     console.error('DynamoDB queryItems error:', error, 'Params:', params);

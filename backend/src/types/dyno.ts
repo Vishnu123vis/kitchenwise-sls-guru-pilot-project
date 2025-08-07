@@ -34,7 +34,7 @@ export interface PantryItemRecord {
   notes?: string; // max 200 chars
 }
 
-// Helper functions for composite sort key
+// Helper functions for overloaded sort key
 export const generateSortKey = (type: PantryItemType, location: PantryLocation, itemId: ItemId): string => {
   return `${type}#${location}#${itemId}`;
 };
@@ -57,8 +57,6 @@ export const generateTypeLocationPrefix = (type?: PantryItemType, location?: Pan
   } else if (type) {
     return `${type}#`;
   }
-  // Note: We cannot filter by location only with this sort key structure
-  // because the format is TYPE#LOCATION#ITEMID
   return '';
 };
 
