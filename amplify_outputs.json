@@ -1,0 +1,32 @@
+{
+  "auth": {
+    "user_pool_id": "us-east-2_Z5syjm4tX",
+    "aws_region": "us-east-2",
+    "user_pool_client_id": "1t2aot59eh6pgt2i8ffvls8p5f",
+    "identity_pool_id": "us-east-2:c33fa38b-4d39-48b4-a55d-175635bf8071",
+    "mfa_methods": [],
+    "standard_required_attributes": [
+      "email"
+    ],
+    "username_attributes": [
+      "email"
+    ],
+    "user_verification_types": [
+      "email"
+    ],
+    "groups": [],
+    "mfa_configuration": "NONE",
+    "password_policy": {
+      "min_length": 8,
+      "require_lowercase": true,
+      "require_numbers": true,
+      "require_symbols": true,
+      "require_uppercase": true
+    },
+    "unauthenticated_identities_enabled": true
+  },
+  "custom": {
+    "api_name": "KitchenWiseAPI",
+    "api_endpoint": "https://ni7czy4s82.execute-api.us-east-2.amazonaws.com/dev"
+  }
+}
