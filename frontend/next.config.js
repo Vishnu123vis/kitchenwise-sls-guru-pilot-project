@@ -14,8 +14,6 @@ const nextConfig = {
   experimental: {
     typedRoutes: false,
   },
-  // Ensure no TypeScript validation
-  swcMinify: true,
 };
 
 module.exports = nextConfig; 
