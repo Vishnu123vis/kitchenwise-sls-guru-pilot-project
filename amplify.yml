@@ -7,6 +7,8 @@ applications:
           commands:
             - echo "Installing frontend dependencies..."
             - npm ci
+            - echo "Installing TypeScript dependencies explicitly..."
+            - npm install typescript @types/node @types/react @types/react-dom --save-dev
         build:
           commands:
             - echo "Building frontend..."
@@ -18,4 +20,5 @@ applications:
       cache:
         paths:
           - node_modules/**/*
-          - .next/cache/**/* 
+          - .next/cache/**/*
+      buildImage: amplify:al2023 
