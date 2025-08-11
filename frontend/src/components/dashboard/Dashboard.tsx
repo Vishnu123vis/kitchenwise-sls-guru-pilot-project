@@ -6,6 +6,7 @@ export default function Dashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     fetchDashboardStats();
@@ -17,6 +18,7 @@ export default function Dashboard() {
       setError(null);
       const data = await getDashboardStats();
       setStats(data);
+      setRetryCount(0); // Reset retry count on success
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch dashboard stats';
       setError(errorMessage);
@@ -26,10 +28,16 @@ export default function Dashboard() {
     }
   };
 
+  const handleRetry = () => {
+    setRetryCount(prev => prev + 1);
+    fetchDashboardStats();
+  };
+
   if (loading) {
     return (
       <div style={{ padding: '20px', textAlign: 'center' }}>
-        <div>Loading dashboard...</div>
+        <div style={{ fontSize: '1.2rem', marginBottom: '10px' }}>Loading dashboard...</div>
+        <div style={{ color: '#6c757d' }}>Fetching your pantry statistics...</div>
       </div>
     );
   }
@@ -37,7 +45,100 @@ export default function Dashboard() {
   if (error) {
     return (
       <div style={{ padding: '20px', textAlign: 'center' }}>
-        <div style={{ color: 'red', marginBottom: '10px' }}>Error: {error}</div>
+        <div style={{ 
+          color: '#dc3545', 
+          marginBottom: '15px', 
+          fontSize: '1.1rem',
+          fontWeight: '500'
+        }}>
+          ⚠️ Dashboard Error
+        </div>
+        <div style={{ 
+          color: '#6c757d', 
+          marginBottom: '20px',
+          maxWidth: '500px',
+          margin: '0 auto 20px auto',
+          lineHeight: '1.5'
+        }}>
+          {error}
+        </div>
+        
+        <div style={{ marginBottom: '20px' }}>
+          <button 
+            onClick={handleRetry}
+            style={{ 
+              padding: '10px 20px', 
+              backgroundColor: '#007bff', 
+              color: 'white', 
+              border: 'none', 
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              marginRight: '10px'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#0056b3';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#007bff';
+            }}
+          >
+            🔄 Try Again
+          </button>
+          
+          {retryCount > 0 && (
+            <div style={{ 
+              fontSize: '0.9rem', 
+              color: '#6c757d', 
+              marginTop: '10px' 
+            }}>
+              Attempt {retryCount + 1} of 3
+            </div>
+          )}
+        </div>
+        
+        {/* Fallback content when API fails */}
+        <div style={{ 
+          padding: '20px', 
+          backgroundColor: '#f8f9fa', 
+          borderRadius: '8px',
+          border: '1px solid #dee2e6',
+          maxWidth: '600px',
+          margin: '0 auto',
+          textAlign: 'left'
+        }}>
+          <h3 style={{ margin: '0 0 15px 0', color: '#495057' }}>
+            📊 Dashboard Overview
+          </h3>
+          <p style={{ 
+            color: '#6c757d', 
+            margin: '0 0 15px 0',
+            lineHeight: '1.6'
+          }}>
+            While we&apos;re unable to load your current pantry statistics, here&apos;s what you can do:
+          </p>
+          <ul style={{ 
+            color: '#6c757d', 
+            lineHeight: '1.6',
+            paddingLeft: '20px',
+            margin: '0'
+          }}>
+            <li>Check your internet connection</li>
+            <li>Try refreshing the page</li>
+            <li>Sign out and sign back in if the issue persists</li>
+            <li>Use the Pantry tab to manage your items directly</li>
+          </ul>
+        </div>
+      </div>
+    );
+  }
+
+  if (!stats) {
+    return (
+      <div style={{ padding: '20px', textAlign: 'center' }}>
+        <div style={{ color: '#6c757d', marginBottom: '15px' }}>
+          No dashboard data available
+        </div>
         <button 
           onClick={fetchDashboardStats}
           style={{ 
@@ -49,16 +150,8 @@ export default function Dashboard() {
             cursor: 'pointer'
           }}
         >
-          Retry
+          Refresh
         </button>
-      </div>
-    );
-  }
-
-  if (!stats) {
-    return (
-      <div style={{ padding: '20px', textAlign: 'center' }}>
-        <div>No dashboard data available</div>
       </div>
     );
   }
