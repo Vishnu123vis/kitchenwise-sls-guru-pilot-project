@@ -7,13 +7,8 @@ applications:
           commands:
             - echo "Installing frontend dependencies..."
             - npm ci --include=dev
-            - echo "Installing Amplify Gen 2 CLI tools..."
-            - npm install -g @aws-amplify/backend-cli --force
-            - echo "Installing root dependencies for backend..."
-            - cd ..
-            - npm ci
-            - echo "Generating backend outputs..."
-            - npx ampx generate outputs --branch $AWS_BRANCH --app-id d2o1zmjfetjbs5
+            - echo "Using pre-generated backend outputs..."
+            - echo "Backend outputs file is already available in the repository"
         build:
           commands:
             - echo "Building frontend..."
