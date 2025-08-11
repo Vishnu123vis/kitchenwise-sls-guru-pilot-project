@@ -14,7 +14,7 @@ applications:
             - echo "Building frontend..."
             - npm run build
       artifacts:
-        baseDirectory: .next
+        baseDirectory: out
         files:
           - '**/*'
       cache:
