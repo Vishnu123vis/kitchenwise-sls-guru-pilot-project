@@ -1,21 +1,23 @@
 version: 1
-frontend:
-  phases:
-    preBuild:
-      commands:
-        - echo "Installing frontend dependencies..."
-        - npm ci --include=dev
-        - echo "Generating backend outputs..."
-        - npx ampx generate outputs
-    build:
-      commands:
-        - echo "Building frontend..."
-        - npm run build
-  artifacts:
-    baseDirectory: frontend/.next
-    files:
-      - '**/*'
-  cache:
-    paths:
-      - frontend/node_modules/**/*
-      - frontend/.next/cache/**/* 
+applications:
+  - appRoot: frontend
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - echo "Installing frontend dependencies..."
+            - npm ci --include=dev
+            - echo "Generating backend outputs..."
+            - npx ampx generate outputs
+        build:
+          commands:
+            - echo "Building frontend..."
+            - npm run build
+      artifacts:
+        baseDirectory: .next
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
+          - .next/cache/**/* 
