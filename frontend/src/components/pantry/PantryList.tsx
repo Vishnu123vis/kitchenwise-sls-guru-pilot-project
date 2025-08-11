@@ -2,6 +2,11 @@ import { useEffect } from 'react';
 import { PantryItem } from '../../types/pantry';
 import PantryItemComponent from './PantryItem';
 
+// Define proper types for pagination
+interface PaginationKey {
+  [key: string]: string | number;
+}
+
 interface PantryListProps {
   items: PantryItem[];
   loading: boolean;
@@ -10,12 +15,10 @@ interface PantryListProps {
   deleteItem: (itemId: string) => Promise<void>;
   fetchItems: (pageNum?: number) => Promise<void>;
   page: number;
-  setPage: (page: number) => void;
-  lastEvaluatedKey: any;
-  pages: any[];
+  lastEvaluatedKey: PaginationKey | null;
 }
 
-export default function PantryList({ items, loading, error, updateItem, deleteItem, fetchItems, page, setPage, lastEvaluatedKey, pages }: PantryListProps) {
+export default function PantryList({ items, loading, error, updateItem, deleteItem, fetchItems, page, lastEvaluatedKey }: PantryListProps) {
   useEffect(() => {
     fetchItems();
   }, [fetchItems]);

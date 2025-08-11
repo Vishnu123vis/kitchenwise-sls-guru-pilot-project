@@ -11,7 +11,7 @@ export default function Home() {
         Sign up or sign in to get started.
       </p>
       <Authenticator>
-        {({ user }) => (
+        {() => (
           <>
             <Dashboard />
             <LogoutButton />

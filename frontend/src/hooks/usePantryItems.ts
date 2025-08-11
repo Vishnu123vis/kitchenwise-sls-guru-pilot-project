@@ -1,14 +1,19 @@
 import { useState, useCallback } from 'react';
-import * as pantryApi from '../api/pantryItems';
 import { PantryItem, PantryItemType, PantryLocation } from '../types/pantry';
+import * as pantryApi from '../api/pantryItems';
+
+// Define proper types for pagination
+interface PaginationKey {
+  [key: string]: string | number;
+}
 
 export function usePantryItems() {
   const [items, setItems] = useState<PantryItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [lastEvaluatedKey, setLastEvaluatedKey] = useState<any>(null);
+  const [lastEvaluatedKey, setLastEvaluatedKey] = useState<PaginationKey | null>(null);
   const [page, setPage] = useState(1);
-  const [pages, setPages] = useState<any[]>([null]); // store keys for each page
+  const [pages, setPages] = useState<(PaginationKey | null)[]>([null]); // store keys for each page
   const [filters, setFilters] = useState<{ type?: PantryItemType; location?: PantryLocation }>({});
 
   const fetchItems = useCallback(async (pageNum = 1, newFilters?: { type?: PantryItemType; location?: PantryLocation }) => {
@@ -23,17 +28,18 @@ export function usePantryItems() {
     }
     
     try {
-      const key = pages[pageNum - 1] || null;
+      const key = pages[pageNum - 1] || undefined;
       const data = await pantryApi.listPantryItems(key, currentFilters.type, currentFilters.location);
       setItems(data.items);
-      setLastEvaluatedKey(data.lastEvaluatedKey);
+      setLastEvaluatedKey(data.lastEvaluatedKey || null);
       setPage(pageNum);
       // Store the key for the next page if it exists
       if (data.lastEvaluatedKey && pages.length === pageNum) {
-        setPages(prev => [...prev, data.lastEvaluatedKey]);
+        setPages(prev => [...prev, data.lastEvaluatedKey!]);
       }
-    } catch (e: any) {
-      setError(e.message || 'Failed to fetch items');
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Failed to fetch items';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -46,8 +52,9 @@ export function usePantryItems() {
       const newItem = await pantryApi.createPantryItem(item);
       setItems((prev) => [...prev, newItem]);
       return newItem;
-    } catch (e: any) {
-      setError(e.message || 'Failed to create item');
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Failed to create item';
+      setError(errorMessage);
       throw e;
     } finally {
       setLoading(false);
@@ -61,8 +68,9 @@ export function usePantryItems() {
       const updatedItem = await pantryApi.updatePantryItem(itemId, item);
       setItems((prev) => prev.map((i) => (i.itemId === itemId ? updatedItem : i)));
       return updatedItem;
-    } catch (e: any) {
-      setError(e.message || 'Failed to update item');
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Failed to update item';
+      setError(errorMessage);
       throw e;
     } finally {
       setLoading(false);
@@ -75,8 +83,9 @@ export function usePantryItems() {
     try {
       await pantryApi.deletePantryItem(itemId);
       setItems((prev) => prev.filter((i) => i.itemId !== itemId));
-    } catch (e: any) {
-      setError(e.message || 'Failed to delete item');
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Failed to delete item';
+      setError(errorMessage);
       throw e;
     } finally {
       setLoading(false);
@@ -103,9 +112,9 @@ export function usePantryItems() {
     setPage,
     lastEvaluatedKey,
     pages,
-    filters,
     applyFilters,
     clearFilters,
+    filters,
   };
 }
 

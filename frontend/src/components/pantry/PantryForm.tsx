@@ -35,8 +35,9 @@ export default function PantryForm({ createItem }: PantryFormProps) {
     try {
       await createItem({ ...form, count: Number(form.count) });
       setForm({ title: '', type: 'Other', location: 'Other', expiryDate: '', count: 1, notes: '' });
-    } catch (e: any) {
-      setError(e.message || 'Failed to add item');
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Failed to add item';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

@@ -34,8 +34,9 @@ export default function PantryItem({ item, updateItem, deleteItem }: PantryItemP
         notes: form.notes,
       });
       setEditMode(false);
-    } catch (e: any) {
-      setError(e.message || 'Failed to update item');
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Failed to update item';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -46,8 +47,9 @@ export default function PantryItem({ item, updateItem, deleteItem }: PantryItemP
     setError(null);
     try {
       await deleteItem(item.itemId);
-    } catch (e: any) {
-      setError(e.message || 'Failed to delete item');
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Failed to delete item';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
