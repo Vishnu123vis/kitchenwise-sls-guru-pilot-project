@@ -19,11 +19,11 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/node": "^20.19.10",
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
-    "typescript": "^5"
+    "typescript": "^5.9.2"
   }
 }
