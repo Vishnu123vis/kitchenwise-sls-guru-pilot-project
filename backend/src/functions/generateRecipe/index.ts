@@ -109,7 +109,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   } catch (error) {
     console.error('generateRecipe error:', error);
     
-    // Handle specific error types
+    // Handle specific error types with better error messages
     if (error instanceof Error) {
       if (error.message.includes('Rate limit exceeded')) {
         return httpResponse({ 
@@ -129,11 +129,39 @@ export const handler: APIGatewayProxyHandler = async (event) => {
           body: { error: error.message } 
         });
       }
+      if (error.message.includes('Unable to parse recipe format')) {
+        console.error('Recipe parsing failed:', error.message);
+        return httpResponse({ 
+          statusCode: 500, 
+          body: { error: 'Recipe generation failed due to unexpected response format. Please try again.' } 
+        });
+      }
+      if (error.message.includes('Invalid JSON response')) {
+        console.error('JSON parsing failed:', error.message);
+        return httpResponse({ 
+          statusCode: 500, 
+          body: { error: 'Recipe generation failed due to invalid response format. Please try again.' } 
+        });
+      }
+      if (error.message.includes('Invalid request to OpenAI API')) {
+        console.error('OpenAI API request failed:', error.message);
+        return httpResponse({ 
+          statusCode: 500, 
+          body: { error: 'Recipe generation service is experiencing issues. Please try again later.' } 
+        });
+      }
     }
+    
+    // Log the full error for debugging
+    console.error('Unhandled error details:', {
+      error: error,
+      message: error instanceof Error ? error.message : 'Unknown error type',
+      stack: error instanceof Error ? error.stack : 'No stack trace'
+    });
     
     return httpResponse({ 
       statusCode: 500, 
-      body: { error: 'Failed to generate recipe. Please try again.' } 
+      body: { error: 'An unexpected error occurred while generating your recipe. Please try again.' } 
     });
   }
 }; 
