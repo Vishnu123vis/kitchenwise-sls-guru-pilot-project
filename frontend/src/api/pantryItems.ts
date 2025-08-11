@@ -29,13 +29,18 @@ function isPantryItem(obj: unknown): obj is PantryItem {
 
 // Type guard to check if response is a valid ListResponse
 function isListResponse(obj: unknown): obj is ListResponse {
-  return (
+  if (
     typeof obj === 'object' &&
     obj !== null &&
-    'items' in obj &&
-    Array.isArray((obj as any).items) &&
-    (obj as any).items.every(isPantryItem)
-  );
+    'items' in obj
+  ) {
+    const objWithItems = obj as { items: unknown };
+    return (
+      Array.isArray(objWithItems.items) &&
+      objWithItems.items.every(isPantryItem)
+    );
+  }
+  return false;
 }
 
 async function getAccessToken() {
