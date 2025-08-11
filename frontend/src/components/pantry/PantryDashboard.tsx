@@ -25,9 +25,7 @@ export default function PantryDashboard() {
         deleteItem={pantry.deleteItem}
         fetchItems={pantry.fetchItems}
         page={pantry.page}
-        setPage={pantry.setPage}
         lastEvaluatedKey={pantry.lastEvaluatedKey}
-        pages={pantry.pages}
       />
     </div>
   );
