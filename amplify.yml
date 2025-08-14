@@ -6,9 +6,7 @@ applications:
         preBuild:
           commands:
             - echo "Installing frontend dependencies..."
-            - npm ci --include=dev
-            - echo "Using pre-generated backend outputs..."
-            - echo "Backend outputs file is already available in the repository"
+            - npm ci --include=dev 
         build:
           commands:
             - echo "Building frontend..."

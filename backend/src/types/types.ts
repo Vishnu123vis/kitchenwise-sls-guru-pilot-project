@@ -71,3 +71,60 @@ export interface StarredRecipeRecord {
   imageUrl: string;
   constraint: string; // User's constraint when recipe was generated
 }
+
+// Recipe Generation Types
+export interface GenerateRecipeRequest {
+  constraint?: string;
+}
+
+export interface GenerateRecipeResponse {
+  recipeId: RecipeId;
+  title: string;
+  description: string;
+  imageUrl: string;
+  constraint: string;
+}
+
+// Recipe data structure for OpenAI service
+export interface RecipeGenerationRequest {
+  constraint: string;
+  pantryItems: Array<{
+    title: string;
+    count: number;
+  }>;
+}
+
+export interface RecipeResponse {
+  title: string;
+  description: string;
+}
+
+// OpenAI API Response Types
+export interface OpenAIResponse {
+  choices: [{
+    message: {
+      content: string;
+    };
+  }];
+}
+
+// Pexels API Types
+export interface PexelsPhoto {
+  id: number;
+  src: {
+    original: string;
+    large2x: string;
+    large: string;
+    medium: string;
+    small: string;
+    portrait: string;
+    landscape: string;
+    tiny: string;
+  };
+  alt: string;
+}
+
+export interface PexelsSearchResponse {
+  photos: PexelsPhoto[];
+  total_results: number;
+}

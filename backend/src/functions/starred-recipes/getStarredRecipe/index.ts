@@ -1,7 +1,7 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import DynamoDB from '../../../libs/DynamoDB';
 import { httpResponse } from '../../../libs/APIResponses';
-import { StarredRecipeRecord } from '../../../types/dyno';
+import { StarredRecipeRecord } from '../../../types/types';
 
 export const handler: APIGatewayProxyHandler = async (event) => {
   try {

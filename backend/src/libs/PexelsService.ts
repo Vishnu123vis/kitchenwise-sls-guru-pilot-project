@@ -1,24 +1,5 @@
 import axios from 'axios';
-
-interface PexelsPhoto {
-  id: number;
-  src: {
-    original: string;
-    large2x: string;
-    large: string;
-    medium: string;
-    small: string;
-    portrait: string;
-    landscape: string;
-    tiny: string;
-  };
-  alt: string;
-}
-
-interface PexelsSearchResponse {
-  photos: PexelsPhoto[];
-  total_results: number;
-}
+import {PexelsSearchResponse } from '../types/types';
 
 export class PexelsService {
   private apiKey: string;

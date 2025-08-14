@@ -1,7 +1,7 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import DynamoDB from '../../../libs/DynamoDB';
 import { httpResponse } from '../../../libs/APIResponses';
-import { PantryItemRecord, PantryItemType, PantryLocation, generateSortKey } from '../../../types/dyno';
+import { PantryItemRecord, PantryItemType, PantryLocation, generateSortKey } from '../../../types/types';
 import { validateUpdatePantryItem } from '../../../libs/inputValidation';
 
 export const handler: APIGatewayProxyHandler = async (event) => {

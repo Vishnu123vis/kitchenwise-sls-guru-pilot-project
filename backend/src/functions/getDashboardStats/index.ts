@@ -1,7 +1,7 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import DynamoDB from '../../libs/DynamoDB';
 import { httpResponse } from '../../libs/APIResponses';
-import { PantryItemRecord, PantryItemType, PantryLocation } from '../../types/dyno';
+import { PantryItemRecord, PantryItemType, PantryLocation } from '../../types/types';
 
 interface DashboardStats {
   overview: {

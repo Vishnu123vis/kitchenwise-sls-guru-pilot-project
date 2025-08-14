@@ -1,33 +1,22 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { v4 as uuidv4 } from 'uuid';
-import { httpResponse } from '../../libs/APIResponses';
-import { validateGenerateRecipe } from '../../libs/inputValidation';
-import { OpenAIService } from '../../libs/OpenAIService';
-import { PexelsService } from '../../libs/PexelsService';
-import DynamoDB from '../../libs/DynamoDB';
-import { PantryItemRecord } from '../../types/dyno';
-
-interface GenerateRecipeRequest {
-  constraint?: string;
-}
-
-interface GenerateRecipeResponse {
-  recipeId: string;
-  title: string;
-  description: string;
-  imageUrl: string;
-  constraint: string;
-}
+import { httpResponse } from '../../../libs/APIResponses';
+import { validateGenerateRecipe } from '../../../libs/inputValidation';
+import { OpenAIService } from '../../../libs/OpenAIService';
+import { PexelsService } from '../../../libs/PexelsService';
+import DynamoDB from '../../../libs/DynamoDB';
+import { PantryItemRecord, GenerateRecipeRequest, GenerateRecipeResponse } from '../../../types/types';
 
 export const handler: APIGatewayProxyHandler = async (event) => {
   try {
+    
     // Extract user ID from JWT token
     const userId = event.requestContext.authorizer?.jwt?.claims?.sub || event.requestContext.authorizer?.claims?.sub;
     if (!userId) {
       return httpResponse({ statusCode: 401, body: { error: 'Unauthorized' } });
     }
 
-    // Parse and validate request body
+    // Parse and validate request body (constraint)
     let requestBody: GenerateRecipeRequest = {};
     try {
       if (event.body) {
@@ -51,20 +40,40 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       });
     }
 
-    // Get user's pantry items
+    // Get user's pantry items with pagination
     const tableName = process.env.DYNAMODB_PANTRY_TABLE;
     if (!tableName) {
       console.error('DYNAMODB_PANTRY_TABLE environment variable not set');
       return httpResponse({ statusCode: 500, body: { error: 'Configuration error' } });
     }
 
-    const { items } = await DynamoDB.queryItems<PantryItemRecord>({
-      TableName: tableName,
-      KeyConditionExpression: 'userId = :userId',
-      ExpressionAttributeValues: { ':userId': userId },
-    });
+    // Collect ALL pantry items using pagination
+    let allItems: PantryItemRecord[] = [];
+    let lastEvaluatedKey: any = undefined;
+    
+    do {
+      const queryParams: any = {
+        TableName: tableName,
+        KeyConditionExpression: 'userId = :userId',
+        ExpressionAttributeValues: { ':userId': userId },
+        Limit: 1000, // Maximum items per query
+      };
+      
+      if (lastEvaluatedKey) {
+        queryParams.ExclusiveStartKey = lastEvaluatedKey;
+      }
+      
+      const result = await DynamoDB.queryItems<PantryItemRecord>(queryParams);
+      
+      if (result.items) {
+        allItems = allItems.concat(result.items);
+      }
+      
+      lastEvaluatedKey = result.lastEvaluatedKey;
+      
+    } while (lastEvaluatedKey);
 
-    if (!items || items.length === 0) {
+    if (allItems.length === 0) {
       return httpResponse({ 
         statusCode: 400, 
         body: { error: 'No pantry items found. Please add some items to your pantry first.' } 
@@ -72,7 +81,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     }
 
     // Prepare pantry items for OpenAI
-    const pantryItems = items.map(item => ({
+    const pantryItems = allItems.map(item => ({
       title: item.title,
       count: item.count
     }));
@@ -103,14 +112,6 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       imageUrl: imageUrl || '', // Return empty string if no image found
       constraint: requestBody.constraint
     };
-
-    console.log('Recipe generated successfully:', {
-      recipeId,
-      title: recipe.title,
-      constraint: requestBody.constraint,
-      hasImage: !!imageUrl
-    });
-
     return httpResponse({ statusCode: 200, body: response });
 
   } catch (error) {

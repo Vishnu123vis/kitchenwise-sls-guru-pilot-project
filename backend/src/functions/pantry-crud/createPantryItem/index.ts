@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import DynamoDB from '../../../libs/DynamoDB';
 import { httpResponse } from '../../../libs/APIResponses';
 import { validateCreatePantryItem } from '../../../libs/inputValidation';
-import { PantryItemRecord, PantryItemType, PantryLocation, generateSortKey } from '../../../types/dyno';
+import { PantryItemRecord, PantryItemType, PantryLocation, generateSortKey } from '../../../types/types';
 
 export const handler: APIGatewayProxyHandler = async (event) => {
   try {

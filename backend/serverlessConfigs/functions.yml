@@ -56,7 +56,7 @@ getDashboardStats:
         authorizer: cognitoAuthorizer
 
 generateRecipe:
-  handler: src/functions/generateRecipe/index.handler
+  handler: src/functions/starred-recipes/generateRecipe/index.handler
   events:
     - httpApi:
         path: /recipes/generate
