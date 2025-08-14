@@ -1,4 +1,5 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
+import { v4 as uuidv4 } from 'uuid';
 import { httpResponse } from '../../libs/APIResponses';
 import { validateGenerateRecipe } from '../../libs/inputValidation';
 import { OpenAIService } from '../../libs/OpenAIService';
@@ -11,6 +12,7 @@ interface GenerateRecipeRequest {
 }
 
 interface GenerateRecipeResponse {
+  recipeId: string;
   title: string;
   description: string;
   imageUrl: string;
@@ -90,8 +92,12 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     console.log('Searching for recipe image...');
     const imageUrl = await pexelsService.searchRecipeImage(recipe.title);
 
+    // Generate unique recipe ID using uuid like pantry items
+    const recipeId = uuidv4();
+
     // Prepare response
     const response: GenerateRecipeResponse = {
+      recipeId,
       title: recipe.title,
       description: recipe.description,
       imageUrl: imageUrl || '', // Return empty string if no image found
@@ -99,6 +105,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     };
 
     console.log('Recipe generated successfully:', {
+      recipeId,
       title: recipe.title,
       constraint: requestBody.constraint,
       hasImage: !!imageUrl

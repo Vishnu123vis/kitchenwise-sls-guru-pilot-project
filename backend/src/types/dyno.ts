@@ -69,4 +69,5 @@ export interface StarredRecipeRecord {
   title: string;
   description: string;
   imageUrl: string;
+  constraint: string; // User's constraint when recipe was generated
 }

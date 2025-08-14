@@ -61,4 +61,28 @@ generateRecipe:
     - httpApi:
         path: /recipes/generate
         method: post
+        authorizer: cognitoAuthorizer
+
+starRecipe:
+  handler: src/functions/starred-recipes/starRecipe/index.handler
+  events:
+    - httpApi:
+        path: /starred-recipes
+        method: post
+        authorizer: cognitoAuthorizer
+
+getStarredRecipes:
+  handler: src/functions/starred-recipes/getStarredRecipes/index.handler
+  events:
+    - httpApi:
+        path: /starred-recipes
+        method: get
+        authorizer: cognitoAuthorizer
+
+getStarredRecipe:
+  handler: src/functions/starred-recipes/getStarredRecipe/index.handler
+  events:
+    - httpApi:
+        path: /starred-recipes/{recipeId}
+        method: get
         authorizer: cognitoAuthorizer 
