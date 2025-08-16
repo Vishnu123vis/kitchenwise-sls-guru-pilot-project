@@ -58,6 +58,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         ExpressionAttributeValues: { ':userId': userId },
         Limit: 1000, // Maximum items per query
       };
+
+      //limit total pantry items
       
       if (lastEvaluatedKey) {
         queryParams.ExclusiveStartKey = lastEvaluatedKey;

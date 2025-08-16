@@ -66,17 +66,36 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       return httpResponse({ statusCode: 500, body: { error: 'Configuration error' } });
     }
 
-    // Get all items for the user
-    const { items } = await DynamoDB.queryItems<PantryItemRecord>({
-      TableName: tableName,
-      KeyConditionExpression: 'userId = :userId',
-      ExpressionAttributeValues: { ':userId': userId },
-    });
+    // Get all items for the user using pagination
+    let allItems: PantryItemRecord[] = [];
+    let lastKey: any = undefined;
+    
+    do {
+      const queryParams: any = {
+        TableName: tableName,
+        KeyConditionExpression: 'userId = :userId',
+        ExpressionAttributeValues: { ':userId': userId },
+      };
+      
+      // Add LastEvaluatedKey for pagination if we have one
+      if (lastKey) {
+        queryParams.ExclusiveStartKey = lastKey;
+      }
+      
+      const { items, lastEvaluatedKey } = await DynamoDB.queryItems<PantryItemRecord>(queryParams);
+      
+      // Add items from this page to our collection
+      allItems = allItems.concat(items);
+      
+      // Update lastKey for next iteration
+      lastKey = lastEvaluatedKey;
+      
+    } while (lastKey); // Continue until no more pages
 
-    // Calculate overview stats
-    const totalItems = items.reduce((sum, item) => sum + item.count, 0);
-    const uniqueItems = items.length;
-    const locationCounts = items.reduce((acc, item) => {
+    // Calculate overview stats using allItems
+    const totalItems = allItems.reduce((sum, item) => sum + item.count, 0);
+    const uniqueItems = allItems.length;
+    const locationCounts = allItems.reduce((acc, item) => {
       acc[item.location] = (acc[item.location] || 0) + item.count;
       return acc;
     }, {} as Record<string, number>);
@@ -95,7 +114,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     };
 
     // Calculate type breakdown
-    const typeCounts = items.reduce((acc, item) => {
+    const typeCounts = allItems.reduce((acc, item) => {
       acc[item.type] = (acc[item.type] || 0) + item.count;
       return acc;
     }, {} as Record<string, number>);
@@ -112,15 +131,15 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       Other: typeCounts.Other || 0,
     };
 
-    // Calculate expiry alerts
-    const urgentItems = getItemsExpiringInRange(items, 0, 7);
-    const warningItems = getItemsExpiringInRange(items, 7, 14);
-    const noticeItems = getItemsExpiringInRange(items, 14, 30);
-    const expiredItems = getExpiredItems(items);
+    // Calculate expiry alerts using allItems
+    const urgentItems = getItemsExpiringInRange(allItems, 0, 7);
+    const warningItems = getItemsExpiringInRange(allItems, 7, 14);
+    const noticeItems = getItemsExpiringInRange(allItems, 14, 30);
+    const expiredItems = getExpiredItems(allItems);
 
-    // Calculate inventory insights
-    const lowStockItems = items.filter(item => item.count <= 2).length;
-    const highStockItems = items.filter(item => item.count >= 5).length;
+    // Calculate inventory insights using allItems
+    const lowStockItems = allItems.filter(item => item.count <= 2).length;
+    const highStockItems = allItems.filter(item => item.count >= 5).length;
     const mostCommonType = Object.entries(typeCounts)
       .reduce((max, [type, count]) => count > max.count ? { type, count } : max, { type: 'None', count: 0 })
       .type;
