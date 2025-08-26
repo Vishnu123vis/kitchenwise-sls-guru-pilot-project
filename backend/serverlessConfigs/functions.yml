@@ -5,7 +5,6 @@ test1:
         path: /test1
         method: get
         authorizer: cognitoAuthorizer 
-        
 
 pantryList:
   handler: src/functions/pantry-crud/getPantryItems/index.handler
@@ -56,7 +55,7 @@ getDashboardStats:
         authorizer: cognitoAuthorizer
 
 generateRecipe:
-  handler: src/functions/starred-recipes/generateRecipe/index.handler
+  handler: src/functions/recipe-functions/generateRecipe/index.handler
   events:
     - httpApi:
         path: /recipes/generate
@@ -64,7 +63,7 @@ generateRecipe:
         authorizer: cognitoAuthorizer
 
 starRecipe:
-  handler: src/functions/starred-recipes/starRecipe/index.handler
+  handler: src/functions/recipe-functions/starRecipe/index.handler
   events:
     - httpApi:
         path: /starred-recipes
@@ -72,7 +71,7 @@ starRecipe:
         authorizer: cognitoAuthorizer
 
 getStarredRecipes:
-  handler: src/functions/starred-recipes/getStarredRecipes/index.handler
+  handler: src/functions/recipe-functions/getStarredRecipes/index.handler
   events:
     - httpApi:
         path: /starred-recipes
@@ -80,7 +79,7 @@ getStarredRecipes:
         authorizer: cognitoAuthorizer
 
 getStarredRecipe:
-  handler: src/functions/starred-recipes/getStarredRecipe/index.handler
+  handler: src/functions/recipe-functions/getStarredRecipe/index.handler
   events:
     - httpApi:
         path: /starred-recipes/{recipeId}

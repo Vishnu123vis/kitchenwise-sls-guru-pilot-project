@@ -24,9 +24,11 @@ export default function AppContainer() {
   };
 
   return (
-    <div>
+    <div style={{ minHeight: '100vh', background: 'var(--background)' }}>
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
-      {renderActiveComponent()}
+      <main style={{ paddingTop: 'var(--spacing-md)' }}>
+        {renderActiveComponent()}
+      </main>
     </div>
   );
 }

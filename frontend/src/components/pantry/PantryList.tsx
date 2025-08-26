@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { PantryItem } from '../../types/pantry';
 import PantryItemComponent from './PantryItem';
+import styles from './PantryList.module.css';
 
 // Define proper types for pagination
 interface PaginationKey {
@@ -23,23 +24,36 @@ export default function PantryList({ items, loading, error, updateItem, deleteIt
     fetchItems();
   }, [fetchItems]);
 
-  if (loading) return <div>Loading pantry...</div>;
-  if (error) return <div style={{ color: 'red' }}>Error: {error}</div>;
-  if (!items.length) return <div>No pantry items found.</div>;
+  if (loading) return <div className={styles.loading}>🔄 Loading pantry...</div>;
+  if (error) return <div className={styles.error}>❌ Error: {error}</div>;
+  if (!items.length) return <div className={styles.empty}>📭 No pantry items found.</div>;
 
   return (
-    <div>
-      <ul style={{ padding: 0, listStyle: 'none' }}>
+    <div className={styles.list}>
+      <h3 className={styles.listTitle}>📋 Inventory Items</h3>
+      <ul className={styles.itemsList}>
         {items.map(item => (
-          <li key={item.itemId} style={{ marginBottom: 8 }}>
+          <li key={item.itemId} className={styles.item}>
             <PantryItemComponent item={item} updateItem={updateItem} deleteItem={deleteItem} />
           </li>
         ))}
       </ul>
-      <div style={{ marginTop: 16, display: 'flex', gap: 8 }}>
-        <button disabled={page === 1} onClick={() => fetchItems(page - 1)}>Previous</button>
-        <span>Page {page}</span>
-        <button disabled={!lastEvaluatedKey} onClick={() => fetchItems(page + 1)}>Next</button>
+      <div className={styles.pagination}>
+        <button 
+          disabled={page === 1} 
+          onClick={() => fetchItems(page - 1)}
+          className={styles.paginationButton}
+        >
+          ⬅️ Previous
+        </button>
+        <span className={styles.pageInfo}>Page {page}</span>
+        <button 
+          disabled={!lastEvaluatedKey} 
+          onClick={() => fetchItems(page + 1)}
+          className={styles.paginationButton}
+        >
+          Next ➡️
+        </button>
       </div>
     </div>
   );

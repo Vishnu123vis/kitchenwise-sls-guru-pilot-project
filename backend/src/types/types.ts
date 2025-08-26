@@ -63,6 +63,8 @@ export const generateTypeLocationPrefix = (type?: PantryItemType, location?: Pan
 // Starred Recipes Table
 export type RecipeId = string;
 
+export type RecipeStatus = 'temporary' | 'permanent';
+
 export interface StarredRecipeRecord {
   userId: UserId; // Partition Key
   recipeId: RecipeId; // Sort Key
@@ -70,6 +72,8 @@ export interface StarredRecipeRecord {
   description: string;
   imageUrl: string;
   constraint: string; // User's constraint when recipe was generated
+  status: RecipeStatus; // 'temporary' or 'permanent'
+  ttlExpiration?: number; // Unix timestamp for TTL (only for temporary recipes)
 }
 
 // Recipe Generation Types

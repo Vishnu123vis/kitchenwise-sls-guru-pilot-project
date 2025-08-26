@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { PantryItemType, PantryLocation, PantryItem } from '../../types/pantry';
+import styles from './PantryForm.module.css';
 
 const typeOptions: PantryItemType[] = [
   'Dairy', 'Produce', 'Meat', 'Grains', 'Snacks', 'Beverages', 'Condiments', 'Frozen', 'Other'
@@ -24,7 +25,7 @@ export default function PantryForm({ createItem }: PantryFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }));
   };
 
@@ -44,19 +45,81 @@ export default function PantryForm({ createItem }: PantryFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: 24 }}>
-      <input name="title" value={form.title} onChange={handleChange} placeholder="Title" required maxLength={50} style={{ marginRight: 8 }} />
-      <select name="type" value={form.type} onChange={handleChange} style={{ marginRight: 8 }}>
-        {typeOptions.map(t => <option key={t} value={t}>{t}</option>)}
-      </select>
-      <select name="location" value={form.location} onChange={handleChange} style={{ marginRight: 8 }}>
-        {locationOptions.map(l => <option key={l} value={l}>{l}</option>)}
-      </select>
-      <input name="expiryDate" value={form.expiryDate} onChange={handleChange} placeholder="YYYY-MM-DD" required style={{ marginRight: 8 }} />
-      <input name="count" type="number" min={1} value={form.count} onChange={handleChange} required style={{ width: 60, marginRight: 8 }} />
-      <input name="notes" value={form.notes} onChange={handleChange} placeholder="Notes" maxLength={200} style={{ marginRight: 8 }} />
-      <button type="submit" disabled={loading}>{loading ? 'Adding...' : 'Add'}</button>
-      {error && <div style={{ color: 'red', marginTop: 8 }}>{error}</div>}
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <h3 className={styles.formTitle}>➕ Add New Pantry Item</h3>
+      
+      <div className={styles.formGrid}>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Item Name</label>
+          <input 
+            name="title" 
+            value={form.title} 
+            onChange={handleChange} 
+            placeholder="e.g., Milk, Bread, Apples" 
+            required 
+            maxLength={50} 
+            className={styles.input}
+          />
+        </div>
+        
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Type</label>
+          <select name="type" value={form.type} onChange={handleChange} className={styles.select}>
+            {typeOptions.map(t => <option key={t} value={t}>{t}</option>)}
+          </select>
+        </div>
+        
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Location</label>
+          <select name="location" value={form.location} onChange={handleChange} className={styles.select}>
+            {locationOptions.map(l => <option key={l} value={l}>{l}</option>)}
+          </select>
+        </div>
+        
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Expiry Date</label>
+          <input 
+            name="expiryDate" 
+            value={form.expiryDate} 
+            onChange={handleChange} 
+            placeholder="YYYY-MM-DD" 
+            required 
+            className={styles.input}
+          />
+        </div>
+        
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Quantity</label>
+          <input 
+            name="count" 
+            type="number" 
+            min={1} 
+            value={form.count} 
+            onChange={handleChange} 
+            required 
+            className={`${styles.input} ${styles.countInput}`}
+          />
+        </div>
+        
+        <div className={`${styles.formGroup} ${styles.notesGroup}`}>
+          <label className={styles.label}>Notes (Optional)</label>
+          <textarea 
+            name="notes" 
+            value={form.notes} 
+            onChange={handleChange} 
+            placeholder="Any additional notes about this item..." 
+            maxLength={200} 
+            className={`${styles.input} ${styles.notesInput}`}
+          />
+        </div>
+      </div>
+      
+      <div className={styles.submitSection}>
+        <button type="submit" disabled={loading} className={styles.submitButton}>
+          {loading ? '🔄 Adding...' : '✅ Add Item'}
+        </button>
+        {error && <div className={styles.error}>❌ {error}</div>}
+      </div>
     </form>
   );
 }

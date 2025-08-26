@@ -29,3 +29,6 @@ StarredRecipesTable:
       - AttributeName: recipeId
         KeyType: RANGE
     BillingMode: PAY_PER_REQUEST
+    TimeToLiveSpecification:
+      AttributeName: ttlExpiration
+      Enabled: true

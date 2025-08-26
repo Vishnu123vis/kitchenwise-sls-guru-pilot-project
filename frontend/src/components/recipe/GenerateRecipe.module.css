@@ -1,0 +1,261 @@
+.generateRecipe {
+  padding: var(--spacing-xl);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-xl);
+  color: var(--text-primary);
+  text-align: center;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.constraintSection {
+  margin-bottom: var(--spacing-xl);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.constraintLabel {
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.constraintSelect {
+  padding: var(--spacing-md);
+  font-size: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  width: 100%;
+  max-width: 300px;
+  background: var(--background);
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+}
+
+.constraintSelect:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.generateButton {
+  padding: var(--spacing-md) var(--spacing-xl);
+  font-size: 1.125rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  margin-bottom: var(--spacing-xl);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.generateButton:hover:not(:disabled) {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.generateButton:disabled {
+  background: var(--text-muted);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.error {
+  padding: var(--spacing-md);
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--error);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+  font-weight: 500;
+}
+
+.recipeCard {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  transition: all var(--transition-normal);
+}
+
+.recipeCard:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.starButton {
+  position: absolute;
+  top: var(--spacing-lg);
+  right: var(--spacing-lg);
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: var(--accent);
+  transition: all var(--transition-fast);
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-md);
+}
+
+.starButton:hover:not(:disabled) {
+  transform: scale(1.1);
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.starButton.starred {
+  color: #ffd700;
+}
+
+.starButton:disabled {
+  cursor: default;
+  transform: none;
+}
+
+.recipeImage {
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+}
+
+.recipeImage img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+  max-height: 350px;
+  box-shadow: var(--shadow-md);
+}
+
+.recipeTitle {
+  font-size: 2rem;
+  margin-bottom: var(--spacing-lg);
+  color: var(--text-primary);
+  text-align: center;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.recipeDescription {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xl);
+  text-align: justify;
+}
+
+.recipeDetails {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-lg);
+  background: var(--surface-hover);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.detailLabel {
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.75rem;
+}
+
+.detailValue {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.generateNewSection {
+  text-align: center;
+  margin-top: var(--spacing-xl);
+}
+
+.generateNewButton {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: 1rem;
+  background: var(--secondary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.generateNewButton:hover {
+  background: #475569;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+@media (max-width: 768px) {
+  .generateRecipe {
+    padding: var(--spacing-lg);
+  }
+  
+  .title {
+    font-size: 1.75rem;
+  }
+  
+  .recipeTitle {
+    font-size: 1.5rem;
+  }
+  
+  .recipeDetails {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+  
+  .constraintSelect {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .generateRecipe {
+    padding: var(--spacing-md);
+  }
+  
+  .recipeCard {
+    padding: var(--spacing-lg);
+  }
+  
+  .starButton {
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    font-size: 1.5rem;
+  }
+}

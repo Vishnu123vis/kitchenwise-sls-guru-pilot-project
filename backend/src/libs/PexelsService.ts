@@ -1,20 +1,34 @@
 import axios from 'axios';
 import {PexelsSearchResponse } from '../types/types';
+import { getAPIKey } from './SecretsManager';
 
 export class PexelsService {
-  private apiKey: string;
+  private apiKey: string | null = null;
   private baseURL = 'https://api.pexels.com/v1';
 
   constructor() {
-    const apiKey = process.env.PEXELS_API_KEY;
-    if (!apiKey) {
-      throw new Error('PEXELS_API_KEY environment variable is required');
+    // Initialize will be called when first needed
+  }
+
+  /**
+   * Initialize the service by fetching the API key
+   */
+  private async initialize(): Promise<void> {
+    if (!this.apiKey) {
+      try {
+        this.apiKey = await getAPIKey('PEXELS_API_KEY');
+      } catch (error) {
+        console.error('Failed to initialize PexelsService:', error);
+        throw new Error('Failed to retrieve Pexels API key from Secrets Manager');
+      }
     }
-    this.apiKey = apiKey;
   }
 
   async searchImage(query: string): Promise<string | null> {
     try {
+      // Ensure service is initialized
+      await this.initialize();
+
       const response = await axios.get<PexelsSearchResponse>(
         `${this.baseURL}/search`,
         {

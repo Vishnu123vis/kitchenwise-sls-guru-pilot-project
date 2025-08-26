@@ -1,20 +1,33 @@
 import axios from 'axios';
 import { RecipeGenerationRequest, RecipeResponse, OpenAIResponse } from '../types/types';
+import { getAPIKey } from './SecretsManager';
 
 export class OpenAIService {
-  private apiKey: string;
+  private apiKey: string | null = null;
   private baseURL = 'https://api.openai.com/v1/chat/completions'; // OpenAI API endpoint
 
   constructor() {
-    const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey) {
-      throw new Error('OPENAI_API_KEY environment variable is required');
+    // Initialize will be called when first needed
+  }
+
+  /**
+   * Initialize the service by fetching the API key
+   */
+  private async initialize(): Promise<void> {
+    if (!this.apiKey) {
+      try {
+        this.apiKey = await getAPIKey('OPENAI_API_KEY');
+      } catch (error) {
+        console.error('Failed to initialize OpenAIService:', error);
+        throw new Error('Failed to retrieve OpenAI API key from Secrets Manager');
+      }
     }
-    this.apiKey = apiKey;
   }
 
   async generateRecipe(request: RecipeGenerationRequest): Promise<RecipeResponse> {
     try {
+      // Ensure service is initialized
+      await this.initialize();
 
       return await this.generateRecipeFromOpenAI(request);
     } catch (error) {
@@ -37,6 +50,9 @@ export class OpenAIService {
   }
 
   private async generateRecipeFromOpenAI(request: RecipeGenerationRequest): Promise<RecipeResponse> {
+    // Ensure service is initialized
+    await this.initialize();
+    
     const prompt = this.buildPrompt(request);
     
     const response = await axios.post<OpenAIResponse>(

@@ -5,7 +5,7 @@ import { validateGenerateRecipe } from '../../../libs/inputValidation';
 import { OpenAIService } from '../../../libs/OpenAIService';
 import { PexelsService } from '../../../libs/PexelsService';
 import DynamoDB from '../../../libs/DynamoDB';
-import { PantryItemRecord, GenerateRecipeRequest, GenerateRecipeResponse } from '../../../types/types';
+import { PantryItemRecord, GenerateRecipeRequest, GenerateRecipeResponse, StarredRecipeRecord } from '../../../types/types';
 
 export const handler: APIGatewayProxyHandler = async (event) => {
   try {
@@ -20,10 +20,31 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     let requestBody: GenerateRecipeRequest = {};
     try {
       if (event.body) {
-        requestBody = JSON.parse(event.body);
+        console.log('Raw event.body:', event.body, 'Type:', typeof event.body);
+        
+        // Handle case where body might already be an object
+        if (typeof event.body === 'object') {
+          requestBody = event.body;
+        } else if (typeof event.body === 'string') {
+          // Handle empty string or malformed JSON
+          if (event.body.trim() === '' || event.body.trim() === '{}') {
+            requestBody = {};
+          } else {
+            requestBody = JSON.parse(event.body);
+          }
+        }
+        
+        console.log('Parsed requestBody:', requestBody, 'Type:', typeof requestBody);
       }
     } catch (error) {
+      console.error('JSON parsing error:', error);
       return httpResponse({ statusCode: 400, body: { error: 'Invalid JSON in request body' } });
+    }
+
+    // Ensure requestBody is an object
+    if (typeof requestBody !== 'object' || requestBody === null) {
+      console.error('requestBody is not an object:', requestBody, 'Type:', typeof requestBody);
+      requestBody = {};
     }
 
     // Set default constraint if not provided
@@ -105,6 +126,35 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
     // Generate unique recipe ID using uuid like pantry items
     const recipeId = uuidv4();
+
+    // Calculate TTL expiration (30 days from now)
+    const ttlExpiration = Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60); // Current time + 30 days in seconds
+
+    // Save recipe to starred_recipes table with TTL and temporary status
+    const starredRecipesTableName = process.env.DYNAMODB_STARRED_RECIPES_TABLE;
+    if (!starredRecipesTableName) {
+      console.error('DYNAMODB_STARRED_RECIPES_TABLE environment variable not set');
+      return httpResponse({ statusCode: 500, body: { error: 'Configuration error' } });
+    }
+
+    const starredRecipe: StarredRecipeRecord = {
+      userId,
+      recipeId,
+      title: recipe.title,
+      description: recipe.description,
+      imageUrl: imageUrl || '',
+      constraint: requestBody.constraint,
+      status: 'temporary',
+      ttlExpiration
+    };
+
+    // Save to starred_recipes table
+    await DynamoDB.putItem({
+      TableName: starredRecipesTableName,
+      Item: starredRecipe
+    });
+
+    console.log(`Recipe saved to starred_recipes table with TTL expiration: ${new Date(ttlExpiration * 1000).toISOString()}`);
 
     // Prepare response
     const response: GenerateRecipeResponse = {
