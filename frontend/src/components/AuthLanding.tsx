@@ -9,43 +9,52 @@ export default function AuthLanding({ children }: { children: React.ReactNode })
       {({ user }) => (
         <>
           {user ? (
+            // User is authenticated - show the main app
             children
           ) : (
+            // User is not authenticated - show the landing page
             <div className={styles.pageContainer}>
-              {/* Landing Page Section - Full Width */}
-              <div className={styles.landingSection}>
-                <div className={styles.landingContent}>
-                  <div className={styles.hero}>
-                    <div className={styles.logo}>🍳</div>
-                    <h1 className={styles.title}>Welcome to KitchenWise</h1>
-                    <p className={styles.subtitle}>
-                      Your smart kitchen companion for recipe generation and pantry management
-                    </p>
+              {/* Hero Section */}
+              <div className={styles.heroSection}>
+                <div className={styles.heroContent}>
+                  <div className={styles.logo}>🍳</div>
+                  <h1 className={styles.title}>Welcome to KitchenWise</h1>
+                  <p className={styles.subtitle}>
+                    Your smart kitchen companion for recipe generation and pantry management
+                  </p>
+                  <p className={styles.description}>
+                    Generate delicious recipes based on your available ingredients, 
+                    manage your kitchen inventory, and discover new dishes with AI-powered suggestions.
+                  </p>
+                </div>
+              </div>
+
+              {/* Features Section */}
+              <div className={styles.featuresSection}>
+                <div className={styles.featuresGrid}>
+                  <div className={styles.feature}>
+                    <span className={styles.featureIcon}>🥫</span>
+                    <h3>Smart Pantry</h3>
+                    <p>Track ingredients and manage your kitchen inventory efficiently</p>
                   </div>
-                  
-                  <div className={styles.features}>
-                    <div className={styles.feature}>
-                      <span className={styles.featureIcon}>🥫</span>
-                      <h3>Smart Pantry</h3>
-                      <p>Track ingredients and manage your kitchen inventory</p>
-                    </div>
-                    <div className={styles.feature}>
-                      <span className={styles.featureIcon}>👨‍🍳</span>
-                      <h3>AI Recipes</h3>
-                      <p>Generate recipes based on your available ingredients</p>
-                    </div>
-                    <div className={styles.feature}>
-                      <span className={styles.featureIcon}>⭐</span>
-                      <h3>Save Favorites</h3>
-                      <p>Star and save your favorite recipes</p>
-                    </div>
+                  <div className={styles.feature}>
+                    <span className={styles.featureIcon}>👨‍🍳</span>
+                    <h3>AI Recipe Generation</h3>
+                    <p>Get personalized recipes based on what you have in your kitchen</p>
+                  </div>
+                  <div className={styles.feature}>
+                    <span className={styles.featureIcon}>⭐</span>
+                    <h3>Save Favorites</h3>
+                    <p>Star and save your favorite recipes for quick access</p>
                   </div>
                 </div>
               </div>
-              
-              {/* Authentication Section - Centered Below Landing Page */}
-              <div className={styles.authSection}>
-                <div className={styles.authWrapper}>
+
+              {/* Get Started Section */}
+              <div className={styles.getStartedSection}>
+                <h2>Ready to get started?</h2>
+                <p>Sign in or create an account to start managing your kitchen</p>
+                <div className={styles.authContainer}>
                   <Authenticator />
                 </div>
               </div>
