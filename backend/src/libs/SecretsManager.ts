@@ -1,19 +1,11 @@
 import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
+import { APIKeys } from '../types/types';
 
-// Initialize the Secrets Manager client
 const client = new SecretsManagerClient({ 
-  region: process.env.AWS_REGION || 'us-east-2' 
+  region: 'us-east-2'
 });
 
-export interface APIKeys {
-  OPENAI_API_KEY: string;
-  PEXELS_API_KEY: string;
-}
 
-/**
- * Fetches API keys from AWS Secrets Manager
- * Uses caching to avoid repeated API calls
- */
 class SecretsManager {
   private static instance: SecretsManager;
   private cachedSecrets: APIKeys | null = null;
@@ -76,18 +68,8 @@ class SecretsManager {
     return secrets[keyName];
   }
 
-  /**
-   * Clear the cache (useful for testing or force refresh)
-   */
-  public clearCache(): void {
-    this.cachedSecrets = null;
-    this.lastFetchTime = 0;
-  }
 }
 
-// Export singleton instance
 export const secretsManager = SecretsManager.getInstance();
-
-// Convenience functions
 export const getAPIKeys = () => secretsManager.getAPIKeys();
 export const getAPIKey = (keyName: keyof APIKeys) => secretsManager.getAPIKey(keyName);

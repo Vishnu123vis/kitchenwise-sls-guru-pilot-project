@@ -132,3 +132,9 @@ export interface PexelsSearchResponse {
   photos: PexelsPhoto[];
   total_results: number;
 }
+
+// API Keys Types for AWS Secrets Manager
+export interface APIKeys {
+  OPENAI_API_KEY: string;
+  PEXELS_API_KEY: string;
+}

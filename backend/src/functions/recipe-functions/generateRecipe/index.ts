@@ -128,7 +128,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const recipeId = uuidv4();
 
     // Calculate TTL expiration (30 days from now)
-    const ttlExpiration = Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60); // Current time + 30 days in seconds
+    const ttlExpiration = Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60); 
 
     // Save recipe to starred_recipes table with TTL and temporary status
     const starredRecipesTableName = process.env.DYNAMODB_STARRED_RECIPES_TABLE;

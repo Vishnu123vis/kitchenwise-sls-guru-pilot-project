@@ -29,11 +29,11 @@ export function validateCreatePantryItem(input: any) {
 
 export function validateDeletePantryItem(input: any) {
   const errors: string[] = [];
-  if (!input || typeof input.itemId !== 'string' || input.itemId.trim() === '') {
-    errors.push('itemId is required and must be a non-empty string');
+  if (!input || !input.itemId || typeof input.itemId !== 'string' || input.itemId.trim() === '') {
+    errors.push('Item ID is required');
   }
-  if (!input || typeof input.userId !== 'string' || input.userId.trim() === '') {
-    errors.push('userId is required and must be a non-empty string');
+  if (!input || !input.userId || typeof input.userId !== 'string' || input.userId.trim() === '') {
+    errors.push('User ID is required');
   }
   return errors;
 }
@@ -67,11 +67,11 @@ export function validateUpdatePantryItem(input: any) {
 
 export function validateGetPantryItem(input: any) {
   const errors: string[] = [];
-  if (!input || typeof input.itemId !== 'string' || input.itemId.trim() === '') {
-    errors.push('itemId is required and must be a non-empty string');
+  if (!input || !input.itemId || typeof input.itemId !== 'string' || input.itemId.trim() === '') {
+    errors.push('Item ID is required');
   }
-  if (!input || typeof input.userId !== 'string' || input.userId.trim() === '') {
-    errors.push('userId is required and must be a non-empty string');
+  if (!input || !input.userId || typeof input.userId !== 'string' || input.userId.trim() === '') {
+    errors.push('User ID is required');
   }
   return errors;
 }
@@ -98,6 +98,58 @@ export function validateGenerateRecipe(input: any) {
 
   if (input.constraint && !validConstraints.includes(input.constraint)) {
     errors.push(`Invalid constraint. Must be one of: ${validConstraints.join(', ')}`);
+  }
+
+  return errors;
+}
+
+export function validateStarRecipe(input: any) {
+  const errors: string[] = [];
+  
+  if (!input) {
+    errors.push('No input provided');
+    return errors;
+  }
+
+  if (!input.recipeId || typeof input.recipeId !== 'string' || input.recipeId.trim() === '') {
+    errors.push('Recipe ID is required');
+  }
+
+  if (!input.action || !['star', 'unstar'].includes(input.action)) {
+    errors.push('Action must be either "star" or "unstar"');
+  }
+
+  return errors;
+}
+
+export function validateGetStarredRecipes(input: any) {
+  const errors: string[] = [];
+  
+  if (!input) {
+    return errors; // No input is valid for this function
+  }
+
+  if (input.limit && (typeof input.limit !== 'number' || input.limit < 1)) {
+    errors.push('Limit must be a positive number');
+  }
+
+  if (input.lastEvaluatedKey && typeof input.lastEvaluatedKey !== 'string') {
+    errors.push('Last evaluated key must be a string');
+  }
+
+  return errors;
+}
+
+export function validateGetStarredRecipe(input: any) {
+  const errors: string[] = [];
+  
+  if (!input) {
+    errors.push('No input provided');
+    return errors;
+  }
+
+  if (!input.recipeId || typeof input.recipeId !== 'string' || input.recipeId.trim() === '') {
+    errors.push('Recipe ID is required');
   }
 
   return errors;
