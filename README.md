@@ -231,14 +231,6 @@ npm test
 - **Lambda**: Cold start optimization with provisioned concurrency
 - **Caching**: 5-minute cache for API keys in Secrets Manager
 
-## 🔧 Development
-
-### Adding New Features
-1. Create Lambda function in `backend/src/functions/`
-2. Add API endpoint in `serverlessConfigs/functions.yml`
-3. Create frontend API client in `frontend/src/api/`
-4. Add React component in `frontend/src/components/`
-5. Update types in respective `types/` folders
 
 ### Code Quality
 - **TypeScript**: Full type safety across frontend and backend
@@ -266,29 +258,9 @@ npm run export
 - **Production**: `prod` stage with production-grade resources
 - **Staging**: `staging` stage for testing
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🙏 Acknowledgments
 
 - **OpenAI** for powerful recipe generation capabilities
 - **Pexels** for high-quality recipe images
 - **AWS** for robust serverless infrastructure
 - **Serverless Framework** for simplified deployment
-
-## 📞 Support
-
-For support, email support@kitchenwise.com or create an issue in this repository.
-
----
-
-**Built with ❤️ using AWS Serverless Architecture**
